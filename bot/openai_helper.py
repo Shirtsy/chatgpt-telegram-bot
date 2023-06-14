@@ -14,9 +14,10 @@ from calendar import monthrange
 
 # Models can be found here: https://platform.openai.com/docs/models/overview
 GPT_3_MODELS = ("gpt-3.5-turbo", "gpt-3.5-turbo-0301")
+GPT_3_16K_MODELS = ("gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613")
 GPT_4_MODELS = ("gpt-4", "gpt-4-0314")
 GPT_4_32K_MODELS = ("gpt-4-32k", "gpt-4-32k-0314")
-GPT_ALL_MODELS = GPT_3_MODELS + GPT_4_MODELS + GPT_4_32K_MODELS
+GPT_ALL_MODELS = GPT_3_MODELS + GPT_3_16K_MODELS + GPT_4_MODELS + GPT_4_32K_MODELS
 
 
 def default_max_tokens(model: str) -> int:
@@ -25,7 +26,7 @@ def default_max_tokens(model: str) -> int:
     :param model: The model name
     :return: The default number of max tokens
     """
-    return 1200 if model in GPT_3_MODELS else 2400
+    return 1200 if model in GPT_3_MODELS or GPT_3_16K_MODELS else 2400
 
 # Load translations
 parent_dir_path = os.path.join(os.path.dirname(__file__), os.pardir)
@@ -274,6 +275,8 @@ class OpenAIHelper:
     def __max_model_tokens(self):
         if self.config['model'] in GPT_3_MODELS:
             return 4096
+        if self.config['model'] in GPT_3_16K_MODELS:
+            return 16384
         if self.config['model'] in GPT_4_MODELS:
             return 8192
         if self.config['model'] in GPT_4_32K_MODELS:
@@ -295,7 +298,7 @@ class OpenAIHelper:
         except KeyError:
             encoding = tiktoken.get_encoding("gpt-3.5-turbo")
 
-        if model in GPT_3_MODELS:
+        if model in GPT_3_MODELS + GPT_3_16K_MODELS:
             tokens_per_message = 4  # every message follows <|start|>{role/name}\n{content}<|end|>\n
             tokens_per_name = -1  # if there's a name, the role is omitted
         elif model in GPT_4_MODELS + GPT_4_32K_MODELS:
