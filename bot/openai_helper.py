@@ -17,7 +17,8 @@ GPT_3_MODELS = ("gpt-3.5-turbo", "gpt-3.5-turbo-0301")
 GPT_3_16K_MODELS = ("gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613")
 GPT_4_MODELS = ("gpt-4", "gpt-4-0613")
 GPT_4_32K_MODELS = ("gpt-4-32k", "gpt-4-32k-0613")
-GPT_ALL_MODELS = GPT_3_MODELS + GPT_3_16K_MODELS + GPT_4_MODELS + GPT_4_32K_MODELS
+GPT_4_128K_MODELS = ("gpt-4-1106-preview")
+GPT_ALL_MODELS = GPT_3_MODELS + GPT_3_16K_MODELS + GPT_4_MODELS + GPT_4_32K_MODELS + GPT_4_128K_MODELS
 
 
 def default_max_tokens(model: str) -> int:
@@ -26,6 +27,8 @@ def default_max_tokens(model: str) -> int:
     :param model: The model name
     :return: The default number of max tokens
     """
+    if model in GPT_4_128K_MODELS:
+        return 128000
     return 1200 if model in GPT_3_MODELS or GPT_3_16K_MODELS else 2400
 
 # Load translations
