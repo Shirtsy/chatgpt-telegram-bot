@@ -284,6 +284,8 @@ class OpenAIHelper:
             return 8192
         if self.config['model'] in GPT_4_32K_MODELS:
             return 32768
+        if self.config['model'] in GPT_4_128K_MODELS:
+            return 128000
         raise NotImplementedError(
             f"Max tokens for model {self.config['model']} is not implemented yet."
         )
